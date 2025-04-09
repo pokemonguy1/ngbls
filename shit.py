@@ -250,9 +250,19 @@ if __name__ == "__main__":
             logger.info(f"Creating background task for {JSON_FILENAME} (Interval: {WRITE_INTERVAL}s).")
             writer_task = loop.create_task(periodic_json_writer(JSON_FILENAME, WRITE_INTERVAL))
 
+            # LOG CHECK
+            if writer_task:
+                logger.info("Writer task object created successfully.") # LOG C
+            else:
+                logger.error("!!! Writer task creation FAILED (returned None/False) !!!") # LOG D
+
             logger.info(f"Starting feed handler...")
             logger.info("Press CTRL+C to stop.")
+
+            # LOG CHECK
+            logger.info(">>>>>>>>> ABOUT TO CALL F.RUN() <<<<<<<<<")
             f.run() # Start listening
+            logger.info(">>>>>>>>>>>> F.RUN() EXECUTED <<<<<<<<<<<<")
 
         else:
             # Exit if no symbols could be subscribed on any exchange
