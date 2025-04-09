@@ -135,7 +135,8 @@ async def periodic_json_writer(filename, interval):
                 total_entries = sum(len(prices) for prices in current_prices.values())
                 logger.debug(f"Total price entries being written: {total_entries}")
                 data_to_write = dict(current_prices)
-            with open(temp_filename, 'w') as f: json.dump(data_to_write, f, indent=4)
+            with open(temp_filename, 'w') as file:
+                file.write(json.dumps(data_to_write, indent=4))
             os.replace(temp_filename, filename)
             logger.debug(f"Successfully wrote data to {filename}")
         except IOError as e:
