@@ -69,7 +69,7 @@ price_data_lock = asyncio.Lock()
 async def ticker_handler(ticker, receipt_timestamp):
     """Callback function to handle incoming ticker data from ANY exchange."""
     # Log entry confirmation
-    logger.critical(f"!!!!!! TICKER HANDLER ENTERED: {ticker.exchange} / {ticker.symbol} - Bid: {ticker.bid} / Ask: {ticker.ask} !!!!!!")
+    # logger.critical(f"!!!!!! TICKER HANDLER ENTERED: {ticker.exchange} / {ticker.symbol} - Bid: {ticker.bid} / Ask: {ticker.ask} !!!!!!")
 
     internal_exchange_name = ticker.exchange
     display_cex_name = EXCHANGE_NAME_MAP.get(internal_exchange_name, internal_exchange_name) # Fallback to internal name if not mapped
@@ -123,8 +123,12 @@ async def ticker_handler(ticker, receipt_timestamp):
 async def periodic_json_writer(filename, interval):
     """Periodically writes the current_prices dictionary to a JSON file."""
     # This function remains the same
+    logger.critical(">>> periodic_json_writer task started <<<") # Add this
     temp_filename = filename + ".tmp"; logged_write_error = False
+    loop_count = 0
     while True:
+        loop_count += 1
+        logger.critical(f">>> Writer loop starting iteration {loop_count} <<<") # Add this
         try: await asyncio.sleep(interval); logged_write_error = False
         except asyncio.CancelledError: logger.info("JSON writer task cancelled."); break
         except Exception as e: logger.error(f"Error in JSON writer sleep: {e}"); await asyncio.sleep(interval * 2); continue
